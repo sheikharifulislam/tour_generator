@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
 import "./app.css";
+import FrameContent from "./components/FrameContent";
 
 function App() {
     const [cssSelector, setCssSelector] = useState("");
     const [onSelector, setOnSelector] = useState(false);
+    const [content, setContent] = useState("");
+
+    const [open, setOpen] = useState(false);
+
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
 
     const clickFn = (e) => {
-        console.log("from classList", e.target.classList);
-        console.log("from element", e.target);
+        e.preventDefault();
+        showDrawer();
         e.stopImmediatePropagation();
         e.stopPropagation();
         const currentElement = e.target;
-
         const result = generateCss(currentElement);
         const selectorStr = result.join(" > ");
-        console.log(selectorStr);
         setCssSelector(selectorStr);
+        setOnSelector(false);
     };
 
     const generateCss = (element, parentLevel = 1, selector = []) => {
@@ -42,37 +53,41 @@ function App() {
     };
 
     const addBorder = (e) => {
+        console.log(e.target);
         e.stopPropagation();
         e.stopImmediatePropagation();
-
         e.target.classList.add("tour-border_hover");
     };
 
     const removeBorder = (e) => {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        console.log(e.target.classList);
-        console.log(e.target);
         e.target.classList.remove("tour-border_hover");
     };
 
     useEffect(() => {
-        document.body.addEventListener("click", clickFn, {
-            capture: onSelector,
-        });
-
         if (onSelector) {
+            document.getElementById("builder").addEventListener("click", clickFn, {
+                capture: onSelector,
+            });
+
             document.body.addEventListener("mouseover", addBorder);
             document.body.addEventListener("mouseout", removeBorder);
         }
 
         if (!onSelector) {
+            document.getElementById("builder").removeEventListener("click", clickFn, {
+                capture: true,
+            });
+
             document.body.removeEventListener("mouseover", addBorder);
             document.body.removeEventListener("mouseout", removeBorder);
         }
 
         return () => {
-            document.body.removeEventListener("click", clickFn);
+            document.getElementById("builder").removeEventListener("click", clickFn, {
+                capture: true,
+            });
             document.body.removeEventListener("mouseover", addBorder);
             document.body.removeEventListener("mouseout", removeBorder);
         };
@@ -89,70 +104,109 @@ function App() {
         console.log("from test click");
     }
 
+    // useEffect(() => {
+
+    // }, []);
+
+    // useEffect(() => {
+    //     document.querySelector(
+    //         "div:nth-of-type(2) > div:first-child > div:first-child > div:first-child > p:first-child > a:first-child"
+    //     ).style.backgroundColor = "red";
+    // }, []);
+
     return (
         <>
-            <div
-                style={{
-                    width: "80%",
-                    margin: "0 auto",
-                    marginTop: "100px",
-                }}
-            ></div>
-
             <button onClick={() => setOnSelector(!onSelector)}>{onSelector ? "OFF" : "ON"}</button>
 
-            <div>
-                <div>
-                    <p id="this_p">This is P</p>
-                </div>
-            </div>
+            {/* <Frame>
+                <button onClick={() => setOnSelector(!onSelector)}>{onSelector ? "OFF" : "ON"}</button>
+                <Modal isOpen={isOpen}>
+                    <ModalContent>
+                        <Input
+                            type="text"
+                            label="text"
+                            variant="bordered"
+                            defaultValue="junior@nextui.org"
+                            className="max-w-xs"
+                            onChange={(e) => setContent(e.target.value)}
+                        />
+                    </ModalContent>
+                </Modal>
+            </Frame> */}
 
-            <div className="second_p">
+            <div id="builder">
                 <div>
                     <div>
-                        <p className="this_p_class">Second P</p>
+                        <p id="this_p">This is P</p>
                     </div>
                 </div>
-            </div>
-            <div id="second_p">
-                <div>
-                    <div>
-                        <p className="this_p_class">third P</p>
-                    </div>
-                </div>
-            </div>
 
-            <div id="nested_div_1">
-                <div>
+                <div className="second_p">
                     <div>
                         <div>
-                            <div className="nested_div_5">
-                                <p className="nested_p"> multi Nested P</p>
+                            <p className="this_p_class">Second P</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="second_p">
+                    <div>
+                        <div>
+                            <p className="this_p_class">third P</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="nested_div_1">
+                    <div>
+                        <div>
+                            <div>
+                                <div className="nested_div_5">
+                                    <p className="nested_p"> multi Nested P</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        <p className="for_body">For Body</p>
+                    </div>
+                </div>
+
+                <div className="nested_div_class">
+                    <div>
+                        <div>
+                            <div>
+                                <div className="nested_div_5">
+                                    <p className="nested_p" onClick={testClick}>
+                                        <a href="https://google.com"> multi Nested P for class</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <div>
+                                <div className="">
+                                    <p className="" onClick={testClick}>
+                                        <a href="https://google.com"> multi Nested Second P for class</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div>
-                <div>
-                    <p className="for_body">For Body</p>
-                </div>
-            </div>
-
-            <div className="nested_div_class">
-                <div>
-                    <div>
-                        <div>
-                            <div className="nested_div_5">
-                                <p className="nested_p" onClick={testClick}>
-                                    multi Nested P for class
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <FrameContent
+                setOnSelector={setOnSelector}
+                showDrawer={showDrawer}
+                cssSelector={cssSelector}
+                setCssSelector={setCssSelector}
+                onClose={onClose}
+                open={open}
+            />
         </>
     );
 }

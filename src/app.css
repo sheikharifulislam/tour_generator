@@ -1,3 +1,5 @@
-.tour-border_hover {
-    border: 5px dotted magenta;
+iframe {
+    width: auto;
+    height: auto;
+    display: block; /* Ensures the iframe takes up the full width available */
 }

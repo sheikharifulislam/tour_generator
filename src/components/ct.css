@@ -1,0 +1,16 @@
+.slideInRight {
+    animation-name: slideInRightAnimation;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes slideInRightAnimation {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

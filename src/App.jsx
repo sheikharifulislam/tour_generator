@@ -5,7 +5,6 @@ import FrameContent from "./components/FrameContent";
 function App() {
     const [cssSelector, setCssSelector] = useState("");
     const [onSelector, setOnSelector] = useState(false);
-    const [content, setContent] = useState("");
 
     const [open, setOpen] = useState(false);
 
@@ -67,7 +66,7 @@ function App() {
 
     useEffect(() => {
         if (onSelector) {
-            document.getElementById("builder").addEventListener("click", clickFn, {
+            document.body.addEventListener("click", clickFn, {
                 capture: onSelector,
             });
 
@@ -76,7 +75,7 @@ function App() {
         }
 
         if (!onSelector) {
-            document.getElementById("builder").removeEventListener("click", clickFn, {
+            document.body.removeEventListener("click", clickFn, {
                 capture: true,
             });
 
@@ -85,7 +84,7 @@ function App() {
         }
 
         return () => {
-            document.getElementById("builder").removeEventListener("click", clickFn, {
+            document.body.removeEventListener("click", clickFn, {
                 capture: true,
             });
             document.body.removeEventListener("mouseover", addBorder);
@@ -104,36 +103,8 @@ function App() {
         console.log("from test click");
     }
 
-    // useEffect(() => {
-
-    // }, []);
-
-    // useEffect(() => {
-    //     document.querySelector(
-    //         "div:nth-of-type(2) > div:first-child > div:first-child > div:first-child > p:first-child > a:first-child"
-    //     ).style.backgroundColor = "red";
-    // }, []);
-
     return (
         <>
-            <button onClick={() => setOnSelector(!onSelector)}>{onSelector ? "OFF" : "ON"}</button>
-
-            {/* <Frame>
-                <button onClick={() => setOnSelector(!onSelector)}>{onSelector ? "OFF" : "ON"}</button>
-                <Modal isOpen={isOpen}>
-                    <ModalContent>
-                        <Input
-                            type="text"
-                            label="text"
-                            variant="bordered"
-                            defaultValue="junior@nextui.org"
-                            className="max-w-xs"
-                            onChange={(e) => setContent(e.target.value)}
-                        />
-                    </ModalContent>
-                </Modal>
-            </Frame> */}
-
             <div id="builder">
                 <div>
                     <div>

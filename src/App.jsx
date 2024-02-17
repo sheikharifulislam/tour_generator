@@ -114,7 +114,7 @@ function App() {
 
     useEffect(() => {
         if (onSelector) {
-            document.getElementById("builder").addEventListener("click", clickFn, {
+            document.body.addEventListener("click", clickFn, {
                 capture: onSelector,
             });
 
@@ -123,7 +123,7 @@ function App() {
         }
 
         if (!onSelector) {
-            document.getElementById("builder").removeEventListener("click", clickFn, {
+            document.body.removeEventListener("click", clickFn, {
                 capture: true,
             });
 
@@ -132,7 +132,7 @@ function App() {
         }
 
         return () => {
-            document.getElementById("builder").removeEventListener("click", clickFn, {
+            document.body.removeEventListener("click", clickFn, {
                 capture: true,
             });
             document.body.removeEventListener("mouseover", addBorder);
@@ -166,24 +166,6 @@ function App() {
 
     return (
         <>
-            <button onClick={() => setOnSelector(!onSelector)}>{onSelector ? "OFF" : "ON"}</button>
-
-            {/* <Frame>
-                <button onClick={() => setOnSelector(!onSelector)}>{onSelector ? "OFF" : "ON"}</button>
-                <Modal isOpen={isOpen}>
-                    <ModalContent>
-                        <Input
-                            type="text"
-                            label="text"
-                            variant="bordered"
-                            defaultValue="junior@nextui.org"
-                            className="max-w-xs"
-                            onChange={(e) => setContent(e.target.value)}
-                        />
-                    </ModalContent>
-                </Modal>
-            </Frame> */}
-
             <div id="builder">
                 <ReactJoyride
                     // stepIndex={0}

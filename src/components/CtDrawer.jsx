@@ -21,8 +21,15 @@ const CtDrawer = ({ children, open, onClose }) => {
 
     return (
         <>
+            {/* <Button
+                type="primary"
+                shape="circle"
+                style={{ position: "absolute", left: "10px", top: "250px", width: "44px", height: "44px" }}
+                icon={<SearchOutlined />}
+            /> */}
             {open && (
                 <div style={style} className="slideInRight">
+                    <h1 className="test">This is test</h1>
                     {children}
                 </div>
             )}

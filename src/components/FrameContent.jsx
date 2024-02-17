@@ -1,13 +1,25 @@
-import { Button } from "antd";
-
 import React from "react";
 import { createPortal } from "react-dom";
-import Frame from "react-frame-component";
+import Frame, { FrameContextConsumer } from "react-frame-component";
 import CtDrawer from "./CtDrawer";
 
-import { ConfigProvider, Typography } from "antd";
+import {
+    CreateTourBtn,
+    Input,
+    InputWrapper,
+    Modal,
+    ModalBody,
+    ModalCloseBtn,
+    ModalContainer,
+    ModalHeader,
+    ModalTitle,
+    PublishTourBtn,
+    SaveTourBtn,
+    StepsWrapper,
+    TourActionBtnWrapper,
+} from "../StyleComponents/ModalHeader.stc";
 
-const { Title } = Typography;
+import { StyleSheetManager } from "styled-components";
 
 const options = [
     { value: "highlight", label: "Highlight" },
@@ -17,7 +29,7 @@ const options = [
     { value: "redirect", label: "Redirect" },
 ];
 
-const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, showDrawer, open }) => {
+const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, showDrawer, open, steps }) => {
     const openBuilder = () => {
         setOnSelector(true);
         onClose();
@@ -44,7 +56,7 @@ const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, sho
             }}
         >
             {!open && (
-                <Button
+                <button
                     type="primary"
                     shape="circle"
                     icon={
@@ -57,38 +69,57 @@ const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, sho
                 />
             )}
 
-            <ConfigProvider>
-                <CtDrawer open={open}>
-                    <h2 className="mt-10">Steps</h2>
-                    <div>
-                        <label htmlFor="title">Title</label>
-                        <input type="text" name="title" id="title" placeholder="Enter Your Tour Title" />
-                    </div>
-                    <div>
-                        <label htmlFor="type">Type</label>
-                        <select name="" id="">
-                            {options.map((item) => (
-                                <option key={item.value} value={item.value}>
-                                    {item.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label htmlFor="css_selector">CSS selector for element to highlight</label>
-                        <input
-                            type="text"
-                            value={cssSelector}
-                            onChange={(e) => setCssSelector(e.target.value)}
-                            name=""
-                            id=""
-                        />
-                    </div>
-                    <div>
-                        <button onClick={openBuilder}>Select Element</button>
-                    </div>
-                </CtDrawer>
-            </ConfigProvider>
+            <CtDrawer open={open}>
+                <FrameContextConsumer>
+                    {(frameContext) => (
+                        <StyleSheetManager target={frameContext.document.head}>
+                            <Modal>
+                                <ModalContainer>
+                                    <ModalHeader>
+                                        <ModalTitle>I Don't Know</ModalTitle>
+                                        <ModalCloseBtn>Collapse</ModalCloseBtn>
+                                    </ModalHeader>
+                                    <ModalBody>
+                                        {/* <TourActionBtnWrapper>
+                                        <CreateTourBtn>Create Tour</CreateTourBtn>
+                                        <UpdateTourBtn>Update Tour</UpdateTourBtn>
+                                    </TourActionBtnWrapper>
+                                    <PreviousTourContainer>
+                                        <PreviousTourTitle>Previous Tour</PreviousTourTitle>
+                                        <PreviousTourList>
+                                            <PreviousTourItemContainer>
+                                                <PreviousTourListItem>Item One</PreviousTourListItem>
+                                                <PreviousTourEditBtn>Edit</PreviousTourEditBtn>
+                                            </PreviousTourItemContainer>
+                                        </PreviousTourList>
+                                    </PreviousTourContainer> */}
+
+                                        <TourActionBtnWrapper>
+                                            <SaveTourBtn>Save Changes</SaveTourBtn>
+                                            <PublishTourBtn>Publish</PublishTourBtn>
+                                        </TourActionBtnWrapper>
+                                        <InputWrapper>
+                                            <label htmlFor="">Tour Name</label>
+                                            <Input type="text" placeholder="Enter Your Tour Name" />
+                                        </InputWrapper>
+                                        <StepsWrapper>
+                                            <h3>Steps</h3>
+                                            <CreateTourBtn>Add Step</CreateTourBtn>
+                                            <InputWrapper>
+                                                <label htmlFor="">Title</label>
+                                                <Input type="text" placeholder="Enter Your Tour Name" />
+                                            </InputWrapper>
+                                            <input type="text" value={cssSelector} />
+                                        </StepsWrapper>
+                                        <input type="text" value={JSON.stringify(steps)} />
+                                        <button onClick={openBuilder}>Enable</button>
+                                    </ModalBody>
+                                </ModalContainer>
+                            </Modal>
+                        </StyleSheetManager>
+                    )}
+                </FrameContextConsumer>
+            </CtDrawer>
         </Frame>,
         document.body
     );

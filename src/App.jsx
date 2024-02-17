@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ReactJoyride, { EVENTS, STATUS } from "react-joyride";
 import "./app.css";
 import FrameContent from "./components/FrameContent";
 
@@ -6,6 +7,45 @@ function App() {
     const [cssSelector, setCssSelector] = useState("");
     const [onSelector, setOnSelector] = useState(false);
     const [content, setContent] = useState("");
+    const [skipIndex, setSkipIndex] = useState(
+        (() => {
+            const index = localStorage.getItem("skipIndex") || 0;
+            return JSON.parse(index);
+        })()
+    );
+    // const [steps, setSteps] = useState([]);
+    const [steps, setSteps] = useState([
+        { target: ".nested_div_5 > .nested_p > :nth-child(1)", content: "this is content" },
+        { target: "#second_p > :nth-child(1) > :nth-child(1) > .this_p_class", content: "this is content" },
+        {
+            target: "#this_p",
+            content: (
+                <div
+                    style={{
+                        background: "pink",
+                    }}
+                >
+                    <img
+                        style={{
+                            backgroundSize: "cover",
+                        }}
+                        src="https://cdn.pixabay.com/photo/2024/02/09/14/54/butterfly-8563213_640.jpg"
+                        alt=""
+                    />
+                </div>
+            ),
+        },
+    ]);
+
+    // useEffect(() => {
+    //     console.log(steps);
+    // }, [steps]);
+
+    // useEffect(() => {
+    //     const el = document.querySelector("#second_p > :nth-child(1) > :nth-child(1) > .this_p_class");
+    //     console.log(el);
+    //     // el.style.backgroundColor = "blue";
+    // }, []);
 
     const [open, setOpen] = useState(false);
 
@@ -27,6 +67,13 @@ function App() {
         const selectorStr = result.join(" > ");
         setCssSelector(selectorStr);
         setOnSelector(false);
+        setSteps((prv) => [
+            ...prv,
+            {
+                target: selectorStr,
+                content: "this is content",
+            },
+        ]);
     };
 
     const generateCss = (element, parentLevel = 1, selector = []) => {
@@ -56,13 +103,13 @@ function App() {
         console.log(e.target);
         e.stopPropagation();
         e.stopImmediatePropagation();
-        e.target.classList.add("tour-border_hover");
+        e.target.style.outline = "rgb(53, 86, 250) solid 3px";
     };
 
     const removeBorder = (e) => {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        e.target.classList.remove("tour-border_hover");
+        e.target.style.outline = null;
     };
 
     useEffect(() => {
@@ -93,26 +140,29 @@ function App() {
         };
     }, [onSelector]);
 
-    useEffect(() => {
-        if (cssSelector) {
-            const selectedElement = document.querySelector(`${cssSelector}`);
-            selectedElement.style.backgroundColor = "red";
-        }
-    }, [cssSelector]);
+    // useEffect(() => {
+    //     if (cssSelector) {
+    //         const selectedElement = document.querySelector(`${cssSelector}`);
+    //         selectedElement.style.backgroundColor = "red";
+    //     }
+    // }, [cssSelector]);
 
     function testClick() {
         console.log("from test click");
     }
 
-    // useEffect(() => {
+    const cb = (state) => {
+        const { index, action, status, type } = state;
+        console.log(status);
 
-    // }, []);
-
-    // useEffect(() => {
-    //     document.querySelector(
-    //         "div:nth-of-type(2) > div:first-child > div:first-child > div:first-child > p:first-child > a:first-child"
-    //     ).style.backgroundColor = "red";
-    // }, []);
+        if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+            setSkipIndex(index + (action === "prev" ? -1 : 1));
+        } else if ([STATUS.FINISHED].includes(status)) {
+            localStorage.removeItem("skipIndex");
+        } else if ([STATUS.SKIPPED].includes(status)) {
+            localStorage.setItem("skipIndex", JSON.stringify(skipIndex));
+        }
+    };
 
     return (
         <>
@@ -135,6 +185,29 @@ function App() {
             </Frame> */}
 
             <div id="builder">
+                <ReactJoyride
+                    // stepIndex={0}
+                    run={true}
+                    continuous={true}
+                    steps={steps}
+                    scrollToFirstStep
+                    showSkipButton
+                    callback={cb}
+                    stepIndex={skipIndex}
+                    // beaconComponent={BeaconComponent}
+                    showProgress
+                    styles={{
+                        options: {
+                            arrowColor: "#e3ffeb",
+                            backgroundColor: "#e3ffeb",
+                            overlayColor: "rgba(79, 26, 0, 0.4)",
+                            primaryColor: "#000",
+                            textColor: "#004a14",
+                            width: 900,
+                            zIndex: 1000,
+                        },
+                    }}
+                />
                 <div>
                     <div>
                         <p id="this_p">This is P</p>
@@ -206,6 +279,7 @@ function App() {
                 setCssSelector={setCssSelector}
                 onClose={onClose}
                 open={open}
+                steps={steps}
             />
         </>
     );

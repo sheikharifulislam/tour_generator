@@ -29,9 +29,14 @@ const options = [
     { value: "redirect", label: "Redirect" },
 ];
 
-const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, showDrawer, open, steps }) => {
+const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, showDrawer, open, steps, setContent }) => {
     const openBuilder = () => {
         setOnSelector(true);
+        onClose();
+    };
+
+    const closeBuilder = () => {
+        setOnSelector(false);
         onClose();
     };
 
@@ -82,7 +87,7 @@ const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, sho
                                 <ModalContainer>
                                     <ModalHeader>
                                         <ModalTitle>I Don't Know</ModalTitle>
-                                        <ModalCloseBtn>Collapse</ModalCloseBtn>
+                                        <ModalCloseBtn onClick={closeBuilder}>Collapse</ModalCloseBtn>
                                     </ModalHeader>
                                     <ModalBody>
                                         {/* <TourActionBtnWrapper>
@@ -112,14 +117,24 @@ const FrameContent = ({ setOnSelector, cssSelector, setCssSelector, onClose, sho
                                             <CreateTourBtn>Add Step</CreateTourBtn>
                                             <InputWrapper>
                                                 <label htmlFor="">Title</label>
-                                                <Input type="text" placeholder="Enter Your Tour Name" />
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Enter Your Tour Content"
+                                                    onChange={setContent}
+                                                />
                                             </InputWrapper>
                                             <input type="text" value={cssSelector} />
                                         </StepsWrapper>
-                                        <input type="text" value={JSON.stringify(steps)} />
+                                        {/* <input type="text" value={JSON.stringify(steps)} /> */}
                                         <button onClick={openBuilder}>Enable</button>
                                     </ModalBody>
                                 </ModalContainer>
+                                {steps.map((item) => (
+                                    <>
+                                        {JSON.stringify(item)} <br />
+                                        <br />
+                                    </>
+                                ))}
                             </Modal>
                         </StyleSheetManager>
                     )}

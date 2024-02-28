@@ -14,38 +14,7 @@ function App() {
         })()
     );
     // const [steps, setSteps] = useState([]);
-    const [steps, setSteps] = useState([
-        { target: ".nested_div_5 > .nested_p > :nth-child(1)", content: "this is content" },
-        { target: "#second_p > :nth-child(1) > :nth-child(1) > .this_p_class", content: "this is content" },
-        {
-            target: "#this_p",
-            content: (
-                <div
-                    style={{
-                        background: "pink",
-                    }}
-                >
-                    <img
-                        style={{
-                            backgroundSize: "cover",
-                        }}
-                        src="https://cdn.pixabay.com/photo/2024/02/09/14/54/butterfly-8563213_640.jpg"
-                        alt=""
-                    />
-                </div>
-            ),
-        },
-    ]);
-
-    // useEffect(() => {
-    //     console.log(steps);
-    // }, [steps]);
-
-    // useEffect(() => {
-    //     const el = document.querySelector("#second_p > :nth-child(1) > :nth-child(1) > .this_p_class");
-    //     console.log(el);
-    //     // el.style.backgroundColor = "blue";
-    // }, []);
+    const [steps, setSteps] = useState([]);
 
     const [open, setOpen] = useState(false);
 
@@ -60,6 +29,7 @@ function App() {
     const clickFn = (e) => {
         e.preventDefault();
         showDrawer();
+        // removeBorder(e);
         e.stopImmediatePropagation();
         e.stopPropagation();
         const currentElement = e.target;
@@ -71,7 +41,7 @@ function App() {
             ...prv,
             {
                 target: selectorStr,
-                content: "this is content",
+                content,
             },
         ]);
     };
@@ -107,6 +77,7 @@ function App() {
     };
 
     const removeBorder = (e) => {
+        console.log("from remove border");
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.target.style.outline = null;
@@ -262,6 +233,7 @@ function App() {
                 onClose={onClose}
                 open={open}
                 steps={steps}
+                setContent={setContent}
             />
         </>
     );
